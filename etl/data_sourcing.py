@@ -1,6 +1,7 @@
 # Std Libs
 import requests
 import logging
+from datetime import datetime
 
 # 3rd Party Libs
 import dateparser
@@ -36,7 +37,7 @@ def update_dropbox(file_path,date,price):
     
     logging.info("Reading file from DB")
     df = read_file(file_path)
-    df = df.append({'Date':date,'Price':price},ignore_index=True)
+    df = df.append({'date':date,'price':price,'update_date':str(datetime.now())},ignore_index=True)
     logging.info("Saving file to DB")
     write_file(df=df,path=file_path)
 
@@ -50,6 +51,7 @@ def run_script():
     date,price = get_data()
     logging.info("Saving to Dropbox")
     update_dropbox(file_path,date,price)
+    logging.info('File saved')
     return
 
 # --------------------------------------------------------------------------------
