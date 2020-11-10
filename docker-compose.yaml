@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  tasker:
+    image: strm/tasker
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      configuration: |
+        schedule:
+            - cron: 0 0 9-19/1 * * *
+              task: oildata
+
+            - cron: 0 36 * * * *
+              task: temptask
+
+            - cron: 0 55 * * * *
+              task: temptask_2
+
+        tasks:
+            docker:
+                - name: oildata
+                  image: rakeshbhat9/oilpricedatasource:1.0
+                  environment: 
+                    - DROPBOX=""
+                  script: 
+                    - python data_sourcing.py
+
+                - name: temptask
+                  image: rakeshbhat9/digitalocean
+                  script: 
+                    - python /app/scripts/test_1.py
+
+                - name: temptask_2
+                  image: rakeshbhat9/digitalocean
+                  script: 
+                    - python /app/scripts/test_2.py
